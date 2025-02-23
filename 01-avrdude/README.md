@@ -36,7 +36,7 @@ Different file formats:
 
 ## 2. Fuses
 
-From the previous commands I found that valuse of low, high, and extended feuses are:  
+From the previous commands I found that the values of low, high, and extended feuses are:  
 - lfuse: 0x62;  
 - hfuse: 0x99;
 - efuse: 0xff.
@@ -57,10 +57,10 @@ Next, configure the controller for full swing oscillator with start-up time 16K 
 
 Here is a simpliest bare metal "Hello World" example without standard AVR libraries, and even without compiler.  
 
-Create the 'firmware' file:  
-`touch firmware`  
+Create the 'firmware.bin' file:  
+`touch firmware.bin`  
 
-### 2.1 Led on
+### 3.1 Led on
 
 With **hexedit** add the '08 9A' opcode ('sbi' for DDRA register, pin 0).  
 
@@ -70,7 +70,7 @@ Upload the firmware with the following command:
 To erease the chip use the next command:  
 `avrdude -c usbasp-clone -p m1284 -e`  
 
-### 2.2 Blink led
+### 3.2 Blink led
 
 With **hexedit** add the '08 9A' opcode ('sbi' for DDRA register, pin 0), and the '00 9A' opcode ('sbi' for PINA register, pin 0).  
 
@@ -80,21 +80,26 @@ Upload the firmware with the following command:
 To erease the chip use the next command:  
 `avrdude -c usbasp-clone -p m1284 -e`  
 
-## 3. Remove AVRDUDE manually installed from sources  
+### 4. Remove AVRDUDE manually installed from sources  
 
 `cd avrdude/build_linux`  
 `cat install_manifest.txt`  
 `xargs sudo rm -f < install_manifest.txt`  
 `which avrdude`  
 
-#### See also:  
+### See also:  
 - [AVRDUDE - AVR Downloader/Uploader (old)](https://www.nongnu.org/avrdude/)  
-- [AVRDUDE Online Documentation](https://avrdudes.github.io/avrdude/)
+- [AVRDUDE Online Documentation](https://avrdudes.github.io/avrdude/)  
 - [AVRDUDE GIT repository](https://github.com/avrdudes/avrdude)  
 - [AVRDUDE wiki](https://github.com/avrdudes/avrdude/wiki)  
+- [8. AVR memories](https://ww1.microchip.com/downloads/aemDocuments/documents/MCU08/ProductDocuments/DataSheets/ATmega164A_PA-324A_PA-644A_PA-1284_P_Data-Sheet-40002070B.pdf#G3.1184896)  
 - [27. Memory programming](https://ww1.microchip.com/downloads/aemDocuments/documents/MCU08/ProductDocuments/DataSheets/ATmega164A_PA-324A_PA-644A_PA-1284_P_Data-Sheet-40002070B.pdf#G3.1182132)  
+- [14.2.2 Toggling the pin](https://ww1.microchip.com/downloads/aemDocuments/documents/MCU08/ProductDocuments/DataSheets/ATmega164A_PA-324A_PA-644A_PA-1284_P_Data-Sheet-40002070B.pdf#G3.1057978)  
 - [AVR® Instruction Set Manual](https://ww1.microchip.com/downloads/aemDocuments/documents/MCU08/ProductDocuments/ReferenceManuals/AVR-InstructionSet-Manual-DS40002198.pdf)  
+- [7.2.1 megaAVR® Devices](https://ww1.microchip.com/downloads/aemDocuments/documents/MCU08/ProductDocuments/ReferenceManuals/AVR-InstructionSet-Manual-DS40002198.pdf#_OPENTOPIC_TOC_PROCESSING_d2079e48916)  
+- [SBRS – Skip if Bit in Register is Set](https://ww1.microchip.com/downloads/aemDocuments/documents/MCU08/ProductDocuments/ReferenceManuals/AVR-InstructionSet-Manual-DS40002198.pdf#_OPENTOPIC_TOC_PROCESSING_d2079e41641)  
+- [CLR – Clear Register](https://ww1.microchip.com/downloads/aemDocuments/documents/MCU08/ProductDocuments/ReferenceManuals/AVR-InstructionSet-Manual-DS40002198.pdf#_OPENTOPIC_TOC_PROCESSING_d2079e23131)  
 - [SBI – Set Bit in I/O Register](https://ww1.microchip.com/downloads/aemDocuments/documents/MCU08/ProductDocuments/ReferenceManuals/AVR-InstructionSet-Manual-DS40002198.pdf)  
-- [AVR® Fuse Calculator](https://www.engbedded.com/fusecalc/)
-- [What is the difference between /opt and /usr/local?](https://unix.stackexchange.com/questions/11544/what-is-the-difference-between-opt-and-usr-local)
+- [AVR® Fuse Calculator](https://www.engbedded.com/fusecalc/)  
+- [What is the difference between /opt and /usr/local?](https://unix.stackexchange.com/questions/11544/what-is-the-difference-between-opt-and-usr-local)  
 - [/usr/bin vs /usr/local/bin on Linux](https://unix.stackexchange.com/questions/8656/usr-bin-vs-usr-local-bin-on-linux)  
