@@ -4,56 +4,50 @@
 
 ### 1.1 USBasp
 
-As a programmer I will use USBasp - USB programmer for Atmel AVR controllers (see https://www.fischl.de/usbasp/). USBasp is a USB in-circuit programmer for Atmel AVR controllers. It simply consists of an ATMega88 or an ATMega8 and a couple of passive components. The programmer uses a firmware-only USB driver, no special USB controller is needed.  
-It is possible to build your own programmer, or buy already manufactured device, for now I prefer option #2.  
-
-After connecting the programmer to a USB port I need to chech the USBasp device:  
+As a programmer I will use USBasp - USB programmer for Atmel AVR controllers (see https://www.fischl.de/usbasp/). After connecting the programmer to a USB port I need to chech the USBasp device:  
 `lsusb`  
 
-I see the following output:  
-#### Bus XXX Device YYY: ID 16c0:05dc Van Ooijen Technische Informatica shared ID for use with libusb
+I should see the following output:  
+`Bus XXX Device YYY: ID 16c0:05dc Van Ooijen Technische Informatica shared ID for use with libusb`  
 
-I am interesting in vendorId:productId pair, it should be '16c0:05dc'.  
+The 'vendorId:productId' pair should be '16c0:05dc'.  
 
 ### 1.2 BIN utilities
 
-It also includes commands for working with binary and hexadecimal files, dumping memory sections, and handling different file formats.
-
 To work with binary and hexidecimal files:  
-`hexdump -C <fileName>`  
-`xxd <fileName>`  
-`hexedit <fileName>`  
+`hexdump -C <fileName>` display file contents in hexadecimal, decimal, octal, or ascii  
+`xxd <fileName>` make a hexdump or do the reverse  
+`hexedit <fileName>` make a hexdump or do the reverse  
 
-### 1.2 AVRDUDE
+### 1.3 AVRDUDE
 
-This section provides instructions for setting up and verifying a connection to an AVR microcontroller using the AVRDUDE utility.  
-
-Then, I need to install downloader-uploader:  
-`sudo apt install avrdude`   
+To install downloader-uploader:  
+`sudo apt install avrdude`  
 
 To check connection with the AVR controller:  
-`avrdude -c usbasp-clone -p m1284`  
-`avrdude -c usbasp-clone -p m1284 -v` verbose output (to get more info add more -v flags)  
+`avrdude -c usbasp -p m1284` check the connection (execute twice to check for the communication issues)  
+`avrdude -c usbasp -p m1284 -B 32kHz` bitclock  
+`avrdude -c usbasp -p m1284 -B 32kHz -v` verbose output  
+`avrdude -c usbasp -p m1284 -B 32kHz -vvvvv` max verbose  
 
 Let's dump all available memory sections:  
-`avrdude -c usbasp-clone -p m1284 -v -U eeprom:r:eeprom_dump`  
-`avrdude -c usbasp-clone -p m1284 -v -U flash:r:flash_dump`  
-`avrdude -c usbasp-clone -p m1284 -v -U lfuse:r:lfuse_dump`  
-`avrdude -c usbasp-clone -p m1284 -v -U hfuse:r:hfuse_dump`  
-`avrdude -c usbasp-clone -p m1284 -v -U efuse:r:efuse_dump`  
-`avrdude -c usbasp-clone -p m1284 -v -U lock:r:lock_dump`  
-`avrdude -c usbasp-clone -p m1284 -v -U signature:r:signature_dump`  
-`avrdude -c usbasp-clone -p m1284 -v -U calibration:r:calibration_dump`  
-
-See http://savannah.nongnu.org/bugs/?44717
+`avrdude -c usbasp -p m1284 -B 32kHz -vvv -U eeprom:r:eeprom_dump`  
+`avrdude -c usbasp -p m1284 -B 32kHz -vvv -U flash:r:flash_dump` (see http://savannah.nongnu.org/bugs/?44717)  
+`avrdude -c usbasp -p m1284 -B 32kHz -vvvv -U flash:r:flash_dump`  
+`avrdude -c usbasp -p m1284 -B 32kHz -v -U lfuse:r:lfuse_dump`  
+`avrdude -c usbasp -p m1284 -B 32kHz -v -U hfuse:r:hfuse_dump`  
+`avrdude -c usbasp -p m1284 -B 32kHz -v -U efuse:r:efuse_dump`  
+`avrdude -c usbasp -p m1284 -B 32kHz -v -U lock:r:lock_dump`  
+`avrdude -c usbasp -p m1284 -B 32kHz -v -U signature:r:signature_dump`  
+`avrdude -c usbasp -p m1284 -B 32kHz -v -U calibration:r:calibration_dump`  
 
 Different file formats:  
-`avrdude -c usbasp-clone -p m1284 -v -U eeprom:r:eeprom_dump_raw:r`  
-`avrdude -c usbasp-clone -p m1284 -v -U eeprom:r:eeprom_dump_intel:i`  
-`avrdude -c usbasp-clone -p m1284 -v -U eeprom:r:eeprom_dump_motorola:s`  
-`avrdude -c usbasp-clone -p m1284 -v -U eeprom:r:eeprom_dump_decimal:d`  
-`avrdude -c usbasp-clone -p m1284 -v -U eeprom:r:eeprom_dump_hex:h`  
-`avrdude -c usbasp-clone -p m1284 -v -U eeprom:r:eeprom_dump_bin:b`  
+`avrdude -c usbasp -p m1284 -B 32kHz -v -U eeprom:r:eeprom_dump:r`  
+`avrdude -c usbasp -p m1284 -B 32kHz -v -U eeprom:r:eeprom_dump:i` (see https://en.wikipedia.org/wiki/Intel_HEX)  
+`avrdude -c usbasp -p m1284 -B 32kHz -v -U eeprom:r:eeprom_dump:s` (see https://en.wikipedia.org/wiki/SREC_(file_format))  
+`avrdude -c usbasp -p m1284 -B 32kHz -v -U eeprom:r:eeprom_dump:d`  
+`avrdude -c usbasp -p m1284 -B 32kHz -v -U eeprom:r:eeprom_dump:h`  
+`avrdude -c usbasp -p m1284 -B 32kHz -v -U eeprom:r:eeprom_dump:b`  
 
 ## 2. Fuses
 
@@ -71,26 +65,29 @@ From the previous commands I found that the values of low, high, and extended fe
 These values correspond the values from datasheet.
 
 Now I want to see the real clock rate (PORTB1) using the bit CKOUT of fuse low byte (0110 0010 (0x62) -> 0010 0010 (0x22)):  
-`avrdude -c usbasp-clone -p m1284 -U lfuse:w:0x22:m`  
+`avrdude -c usbasp -p m1284 -B 32kHz -v -U lfuse:w:0x22:m`  
 
-With the current example you will get something that really similar to the 1MHz pulses, but depending on temperature or supply voltage result value may vary. Just for investigation try to freez the MCU, then check the real frequency on pin 1 port B, and then heat it, and check the frequency again. Moreover, try to change the value of supply voltage (of course do not exceed the maximum voltage, see the datasheet).
+With the current example I get something that really similar to the 1MHz pulses, but depending on temperature or supply voltage result value may vary. Just for investigation I will try to freez the MCU, then check the real frequency on pin 1 port B, and then heat it, and check the frequency again. Moreover, I will try to change the value of supply voltage (of course without exceeding the maximum voltage, see the datasheet).
 
 Here is some results:  
-- t = 28-29 degree Celsius: f = [968 ; 971] kHz;
-- t = -3 degree Celsius: f = 49.6 kHz;
-- t = 90-92 degree Celsius: f = [50.8 ; 50.9] kHz;
-- V = 1.9 volts: f = 47.9 kHz;
-- V = 2.5 volts: f = 49.5 kHz;
-- V = 3.0 volts: f = 50.0 kHz;
-- V = 4.0 volts: f = 50.1 kHz;
-- V = 5.0 volts: f = 50.2 kHz;
-- V = 5.5 volts: f = 50.2 kHz.
+- t = 28-30 degree Celsius: f = [968 ; 971] kHz;
+- t = -20 degree Celsius: f = ~ 955 kHz;
+- t = ~ 75 degree Celsius: f = ~ 997 kHz;
+- V = 1.9 volts: f = 974 kHz;
+- V = 2.5 volts: f = [978 ; 981] kHz;
+- V = 3.0 volts: f = [976 ; 981] kHz;
+- V = 4.0 volts: f = [973 ; 977] kHz;
+- V = 5.0 volts: f = [969 ; 971] kHz;
+- V = 5.2 volts: f = [969 ; 971] kHz.
 
 Next, disable the clock prescaler (0010 0010 (0x22) -> 1010 0010 (0xA2)):  
-`avrdude -c usbasp-clone -p m1284 -U lfuse:w:0xA2:m`  
+`avrdude -c usbasp -p m1284 -B 32kHz -v -U lfuse:w:0xA2:m`  
 
-Next, configure the controller for full swing oscillator with start-up time 16K CK + 65ms (1010 0010 (0xA2) -> 1011 0111 (0xB7)):  
-`avrdude -c usbasp-clone -p m1284 -U lfuse:w:0xB7:m`  
+<!-- Next, configure the controller for full swing oscillator with start-up time 16K CK + 65ms (1010 0010 (0xA2) -> 1011 0111 (0xB7)):  
+`avrdude -c usbasp -p m1284 -B 32kHz -v -U lfuse:w:0xB7:m`   -->
+
+Put back initial value:  
+`avrdude -c usbasp -p m1284 -B 32kHz -v -U lfuse:w:0x62:m`  
 
 ## 3. Opcodes (pure bare metal "Hello World!")
 
@@ -104,20 +101,20 @@ Create the 'firmware.bin' file:
 With **hexedit** add the '08 9A' opcode ('sbi' for DDRA register, pin 0).  
 
 Upload the firmware with the following command:  
-`avrdude -c usbasp-clone -p m1284 -U flash:w:firmware.bin:r`  
+`avrdude -c usbasp -p m1284 -B 32kHz -v -U flash:w:firmware.bin:r`  
 
 To erease the chip use the next command:  
-`avrdude -c usbasp-clone -p m1284 -e`  
+`avrdude -c usbasp -p m1284 -B 32kHz -v -e`  
 
 ### 3.2 Blink led
 
 With **hexedit** add the '08 9A' opcode ('sbi' for DDRA register, pin 0), and the '00 9A' opcode ('sbi' for PINA register, pin 0).  
 
 Upload the firmware with the following command:  
-`avrdude -c usbasp-clone -p m1284 -U flash:w:firmware.bin:r`  
+`avrdude -c usbasp -p m1284 -U flash:w:firmware.bin:r`  
 
 To erease the chip use the next command:  
-`avrdude -c usbasp-clone -p m1284 -e`  
+`avrdude -c usbasp -p m1284 -e`  
 
 ### 4. Remove AVRDUDE manually installed from sources  
 
