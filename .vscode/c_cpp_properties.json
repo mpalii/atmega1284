@@ -1,0 +1,15 @@
+{
+    "configurations": [
+        {
+            "name": "AVR",
+            "includePath": [
+                "/lib/avr/include/**"
+            ],
+            "defines": [
+                "__AVR_ATmega1284__"
+            ],
+            "cStandard": "c11"
+        }
+    ],
+    "version": 4
+}
