@@ -1,37 +1,3 @@
-#!/bin/bash
-# C project initializer
-
-if [ -e Makefile ] || [ -e src/main.c ]; then
-    echo "Project already initialized"
-    exit 1
-fi
-
-mkdir -p src
-
-# main.c
-cat > "src/main.c" <<EOF
-/**
- * @author $(whoami)
- * @brief 
- * @version 1.0
- * @date $(date '+%Y-%m-%d')
- */
-
-#include <avr/io.h>
-
-int main(void)
-{
-    while(1)
-    {
-    
-    }
-
-    return 0;
-}
-EOF
-
-# Makefile
-cat > "Makefile" <<'EOF'
 # Makefile
 SOURCE       = ./src/main.c
 DESTINATION  = firmware
@@ -79,7 +45,4 @@ fuses-with-divider-ext-osc:
 
 fuses-jtag-disable:
 	@avrdude -c $(PROGRAMMER) -p $(DEVICE) -U hfuse:w:0xd9:m
-
-EOF
-
 
