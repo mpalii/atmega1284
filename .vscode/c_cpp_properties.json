@@ -3,12 +3,14 @@
         {
             "name": "AVR",
             "includePath": [
-                "/lib/avr/include/**"
+                "/usr/lib/avr/include",
+                "/usr/include"
             ],
             "defines": [
                 "__AVR_ATmega1284__"
             ],
-            "cStandard": "c11"
+            "cStandard": "c11",
+            "intelliSenseMode": "gcc-x64"
         }
     ],
     "version": 4
