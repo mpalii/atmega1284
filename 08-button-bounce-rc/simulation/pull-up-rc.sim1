@@ -1,0 +1,47 @@
+<circuit version="1.1.0-SR1" rev="2005" stepSize="1000000" stepsPS="1000000" NLsteps="100000" reaStep="1000000" animate="0" >
+
+<item itemtype="Ground" CircId="Ground-55" mainComp="false" Show_id="false" Show_Val="false" Pos="880,484" rotation="0" hflip="1" vflip="1" label="Ground-55" idLabPos="-16,8" labelrot="0" valLabPos="-16,20" valLabRot="0" />
+
+<item itemtype="Push" CircId="Push-56" mainComp="false" Show_id="false" Show_Val="false" Pos="880,436" rotation="-90" hflip="1" vflip="1" label="Push-56" idLabPos="-12,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Norm_Close="false" Poles="1" />
+
+<item itemtype="Capacitor" CircId="Capacitor-72" mainComp="false" ShowProp="Capacitance" Show_id="false" Show_Val="true" Pos="824,440" rotation="-90" hflip="1" vflip="1" label="Capacitor-72" idLabPos="-16,-24" labelrot="0" valLabPos="-7.71096,7.72673" valLabRot="0" Capacitance="1 µF" Resistance="1e-06 Ω" InitVolt="0 V" ReaStep="0 ns" />
+
+<item itemtype="Ground" CircId="Ground-84" mainComp="false" Show_id="false" Show_Val="false" Pos="824,484" rotation="0" hflip="1" vflip="1" label="Ground-84" idLabPos="-16,8" labelrot="0" valLabPos="-16,20" valLabRot="0" />
+
+<item itemtype="Oscope" CircId="Oscope-89" mainComp="false" Show_id="false" Show_Val="false" Pos="636,408" rotation="0" hflip="1" vflip="1" label="Oscope-89" idLabPos="-90,-100" labelrot="0" valLabPos="-16,20" valLabRot="0" Basic_X="135 _px" Basic_Y="135 _px" BufferSize="999999" connectGnd="true" InputImped="10 MΩ" TimDiv="100000000000" TimPos="0,0,0,0," VolDiv="1,1,1,1," Tunnels=",,,," Trigger="4" Filter="0.1 V" AutoSC="4" Tracks="1" HideCh="false,false,false,false," VolPos="0,0,0,0," />
+
+<item itemtype="Resistor" CircId="Resistor-93" mainComp="false" ShowProp="Resistance" Show_id="false" Show_Val="true" Pos="880,388" rotation="90" hflip="-1" vflip="1" label="Resistor-93" idLabPos="-16,-24" labelrot="0" valLabPos="-10.7275,-16.8043" valLabRot="0" Resistance="20 kΩ" />
+
+<item itemtype="Tunnel" CircId="Tunnel-118" mainComp="false" Show_id="false" Show_Val="false" Pos="532,360" rotation="360" hflip="1" vflip="1" label="Tunnel-118" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="PIN" IsBus="false" />
+
+<item itemtype="Rail" CircId="Rail-149" mainComp="false" ShowProp="Voltage" Show_id="false" Show_Val="true" Pos="880,340" rotation="-270" hflip="1" vflip="1" label="Rail-149" idLabPos="-16,-24" labelrot="0" valLabPos="-12.0368,5.91187" valLabRot="-90" Voltage="5 V" />
+
+<item itemtype="Resistor" CircId="Resistor-166" mainComp="false" ShowProp="Resistance" Show_id="false" Show_Val="true" Pos="848,412" rotation="360" hflip="-1" vflip="1" label="Resistor-166" idLabPos="-16,-24" labelrot="0" valLabPos="-10.1846,-16.2613" valLabRot="0" Resistance="20 kΩ" />
+
+<item itemtype="Tunnel" CircId="Tunnel-167" mainComp="false" Show_id="false" Show_Val="false" Pos="816,412" rotation="0" hflip="1" vflip="-1" label="Tunnel-167" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="PIN" IsBus="false" />
+
+<item itemtype="Node" CircId="Node-189" mainComp="false" Pos="880,412" />
+
+<item itemtype="Node" CircId="Node-193" mainComp="false" Pos="824,412" />
+
+<item itemtype="Connector" uid="connector-177" startpinid="Tunnel-118-pin" endpinid="Oscope-89-Pin0" pointList="532,360,548,360" />
+
+<item itemtype="Connector" uid="Connector-185" startpinid="Rail-149-outnod" endpinid="Resistor-93-lPin" pointList="880,356,880,372" />
+
+<item itemtype="Connector" uid="Connector-186" startpinid="Resistor-93-rPin" endpinid="Node-189-0" pointList="880,404,880,412" />
+
+<item itemtype="Connector" uid="Connector-187" startpinid="Push-56-pinP0" endpinid="Ground-55-Gnd" pointList="880,452,880,468" />
+
+<item itemtype="Connector" uid="Connector-188" startpinid="Resistor-166-lPin" endpinid="Node-189-1" pointList="864,412,880,412" />
+
+<item itemtype="Connector" uid="Connector-190" startpinid="Node-189-2" endpinid="Push-56-switch0pinN" pointList="880,412,880,420" />
+
+<item itemtype="Connector" uid="Connector-191" startpinid="Tunnel-167-pin" endpinid="Node-193-0" pointList="816,412,824,412" />
+
+<item itemtype="Connector" uid="Connector-192" startpinid="Capacitor-72-rPin" endpinid="Node-193-1" pointList="824,424,824,412" />
+
+<item itemtype="Connector" uid="Connector-194" startpinid="Node-193-2" endpinid="Resistor-166-rPin" pointList="824,412,832,412" />
+
+<item itemtype="Connector" uid="Connector-195" startpinid="Capacitor-72-lPin" endpinid="Ground-84-Gnd" pointList="824,456,824,468" />
+
+</circuit>
