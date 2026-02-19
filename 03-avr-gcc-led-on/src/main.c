@@ -60,6 +60,29 @@ int main(void)
     // char *register_ddra_address = (char *) 0x01;
     // *register_ddra_address |= (1 << 0);
 
+    /**
+     * 9. sbi - using assembly inline
+     */
+    // __asm__("sbi 0x01, 0");
+
+    /**
+     * 10. in, ori, out - multiline assemply
+     */
+    // __asm__ (
+    //     "in   r18, 0x01      \n\t"
+    //     "ori  r18, 0x01      \n\t"
+    //     "out  0x01, r18      \n\t"
+    // );
+
+    /**
+     * 11. lds, ori, sts - multiline assemply
+     */
+    // __asm__ (
+    //     "lds  r18, 0x21      \n\t"
+    //     "ori  r18, 0x01      \n\t"
+    //     "sts  0x21, r18      \n\t"
+    // );
+
     while (1)
     {
         // NOP
