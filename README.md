@@ -12,4 +12,4 @@ This repository is dedicated to research and experimentation with the **ATmega12
 - [AVR® Fuse Calculator](https://www.engbedded.com/fusecalc/)  
 - [AVR-LibC](https://avrdudes.github.io/avr-libc/)  
 - [AVR-GCC](https://gcc.gnu.org/wiki/avr-gcc)  
-
+- [SNx4HC595 8-Bit Shift Registers With 3-State Output Registers](https://www.ti.com/lit/ds/symlink/sn74hc595.pdf)  
