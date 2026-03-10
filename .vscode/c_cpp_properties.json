@@ -7,7 +7,10 @@
                 "/usr/include"
             ],
             "defines": [
-                "__AVR_ATmega1284__"
+                "__AVR_ATmega1284__",
+                "SER",
+                "RCLK",
+                "SRCLK"
             ],
             "cStandard": "c11",
             "intelliSenseMode": "gcc-x64"
