@@ -1,0 +1,41 @@
+
+### Chat GPT
+
+**Question:**  
+> What is True Read-While-Write Operation in the context of AVR?  
+
+**Answer:**  
+> True Read-While-Write (RWW) Operation in AVR microcontrollers is a feature of the on-chip Flash memory that allows the program to be executed from one memory section while another section is being written (programmed).  
+> 
+> The Flash in AVR is divided into two sections:  
+> - **RWW section (Read-While-Write)** — typically used for the main program;  
+> - **NRWW section (No-Read-While-Write)** — usually reserved for the bootloader.  
+>
+> If the CPU is executing code from the NRWW section, it can simultaneously write data to the RWW section. This is what is meant by *True RWW*. However, if a write operation targets the NRWW section, Flash reads are not possible.  
+>
+>**Typical scenario:** A bootloader located in the NRWW section receives a new firmware image over UART/SPI/I²C/USB and programs it into the RWW section.  
+>
+>**Practical example:**  
+>- The bootloader (running in NRWW) receives a block of data over UART;  
+>- Using the `SPM` instruction, it erases/programs a Flash page in the RWW section;  
+>- During this process, the bootloader continues running normally since it executes from NRWW.  
+>
+>In summary, True Read-While-Write in AVR is a hardware feature that enables code execution from the NRWW section while the controller programs pages in the RWW section.  
+
+
+
+
+----------------------
+
+
+
+
+---------------
+
+
+
+
+
+
+
+----
