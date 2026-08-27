@@ -12,4 +12,5 @@ This repository is dedicated to research and experimentation with the **ATmega12
 - [AVRDUDE GIT repository](https://github.com/avrdudes/avrdude)  
 - [AVR® Fuse Calculator](https://www.engbedded.com/fusecalc/)  
 - [AVR-LibC](https://avrdudes.github.io/avr-libc/)  
+- [AVR-LibC Manual](https://avrdudes.github.io/avr-libc/avr-libc-user-manual-2.3.0/index.html)  
 - [AVR-GCC](https://gcc.gnu.org/wiki/avr-gcc)  
