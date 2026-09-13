@@ -31,69 +31,206 @@ EOF
 
 # Makefile
 cat > "Makefile" <<'EOF'
-# Makefile
-DESTINATION  = firmware
-DEVICE       = atmega1284
-PROGRAMMER   = avrispmkII
+# ==============================================================
+# Colored output
+# ==============================================================
+GREEN  = \033[1;32m
+YELLOW = \033[1;33m
+RED    = \033[1;31m
+RESET  = \033[0m
 
+# ==============================================================
+# Project configuration
+# ==============================================================
+DEVICE      = atmega1284
+PROGRAMMER  = avrispmkII
+TARGET_DIR  = target
+TARGET_NAME = firmware
+
+# ==============================================================
+# Tools
+# ==============================================================
+CC      = avr-gcc
+OBJCOPY = avr-objcopy
+OBJDUMP = avr-objdump
+SIZE    = avr-size
+AVRDUDE = avrdude
+
+# ==============================================================
+# Compiler flags
+# ==============================================================
+CFLAGS = \
+	-mmcu=$(DEVICE) \
+	-Os \
+	-Wall \
+	-Wextra \
+	-Wconversion \
+	-Wsign-conversion \
+	-Woverflow
+
+# ==============================================================
+# objcopy flags
+# ==============================================================
+HEXFLAGS = \
+	--input-target=elf32-avr \
+	--output-target=ihex \
+	--only-section=.text \
+	--only-section=.data
+
+FUSEFLAGS = \
+	--input-target=elf32-avr \
+	--output-target=binary \
+	--only-section=.fuse 
+
+# ==============================================================
 # Source files
-SOURCES = 									\
-    src/main.c 								\
+# ==============================================================
+SOURCES = \
+	src/main.c	\
+	src/drivers/fuses.c
 
-# Object files
-OBJECTS = $(patsubst src/%.c, target/%.o, $(SOURCES))
+OBJECTS = $(patsubst src/%.c,$(TARGET_DIR)/%.o,$(SOURCES))
 
-default: build 
+ELF = $(TARGET_DIR)/$(TARGET_NAME).elf
+HEX = $(TARGET_DIR)/flash.hex
 
-build: clean $(OBJECTS)
-	@avr-gcc -mmcu=$(DEVICE) -Os -Wall -Wextra -Wconversion -Wsign-conversion -Woverflow -o ./target/$(DESTINATION).elf $(OBJECTS)
-	@avr-objcopy --input-target elf32-avr --output-target ihex --verbose ./target/$(DESTINATION).elf ./target/$(DESTINATION).hex
-	@echo "INFO: build finished"
+# ==============================================================
+# Default target
+# ==============================================================
+.PHONY: default build clean check erase flash dump disasm size \
+        fuses fuses-upload
 
-./target/%.o: ./src/%.c
+default: build
+
+# ==============================================================
+# Build
+# ==============================================================
+build: $(HEX)
+	@echo "$(GREEN)✔ Build finished$(RESET)"
+
+# ==============================================================
+# Linking
+# ==============================================================
+$(ELF): $(OBJECTS)
+	@echo "$(YELLOW)⧗ Linking...$(RESET)"
+	@$(CC) $(CFLAGS) -o $@ $^
+
+# ==============================================================
+# HEX generation
+# ==============================================================
+$(HEX): $(ELF)
+	@echo "$(YELLOW)⧗ Creating HEX...$(RESET)"
+	@$(OBJCOPY) $(HEXFLAGS) $< $@
+
+# ==============================================================
+# Compilation
+# ==============================================================
+$(TARGET_DIR)/%.o: src/%.c
 	@mkdir -p $(@D)
-	@echo "Compiling $<..."
-	@avr-gcc -mmcu=$(DEVICE) -Os -Wall -Wextra -Wconversion -Wsign-conversion -Woverflow -c $< -o $@
+	@echo "$(YELLOW)⧗ Compiling $<...$(RESET)"
+	@$(CC) $(CFLAGS) -c $< -o $@
 
-clean:
-	@rm --force --recursive --verbose ./target
-	@echo "INFO: clean finished"
+# ==============================================================
+# Fuse extraction
+# ==============================================================
+fuses: $(ELF)
+	@echo "$(YELLOW)⧗ Extracting fuses...$(RESET)"
 
+	@$(OBJCOPY) $(FUSEFLAGS) $< $(TARGET_DIR)/fuses.bin
+
+	@dd if=$(TARGET_DIR)/fuses.bin \
+		of=$(TARGET_DIR)/lfuse.bin \
+		bs=1 count=1 skip=0 status=none
+
+	@dd if=$(TARGET_DIR)/fuses.bin \
+		of=$(TARGET_DIR)/hfuse.bin \
+		bs=1 count=1 skip=1 status=none
+
+	@dd if=$(TARGET_DIR)/fuses.bin \
+		of=$(TARGET_DIR)/efuse.bin \
+		bs=1 count=1 skip=2 status=none
+
+	@$(OBJCOPY) -I binary -O ihex \
+		$(TARGET_DIR)/lfuse.bin \
+		$(TARGET_DIR)/lfuse.hex
+
+	@$(OBJCOPY) -I binary -O ihex \
+		$(TARGET_DIR)/hfuse.bin \
+		$(TARGET_DIR)/hfuse.hex
+
+	@$(OBJCOPY) -I binary -O ihex \
+		$(TARGET_DIR)/efuse.bin \
+		$(TARGET_DIR)/efuse.hex
+
+	@echo -n "lfuse="
+	@hexdump -v -e '1/1 "0x%02X\n"' $(TARGET_DIR)/lfuse.bin
+
+	@echo -n "hfuse="
+	@hexdump -v -e '1/1 "0x%02X\n"' $(TARGET_DIR)/hfuse.bin
+
+	@echo -n "efuse="
+	@hexdump -v -e '1/1 "0x%02X\n"' $(TARGET_DIR)/efuse.bin
+
+	@rm --force $(TARGET_DIR)/*.bin
+
+	@echo "$(GREEN)✔ Fuse files created$(RESET)"
+
+# ==============================================================
+# Programming
+# ==============================================================
 check:
-	@avrdude -c $(PROGRAMMER) -p $(DEVICE)
+	@$(AVRDUDE) \
+		-c $(PROGRAMMER) \
+		-p $(DEVICE)
 
-erease:
-	@avrdude -c $(PROGRAMMER) -p $(DEVICE) -e
+erase:
+	@$(AVRDUDE) \
+		-c $(PROGRAMMER) \
+		-p $(DEVICE) \
+		-e
 
-upload:
-	@avrdude -c $(PROGRAMMER) -p $(DEVICE) -U flash:w:./target/$(DESTINATION).hex:i
+flash: $(HEX)
+	@echo "$(YELLOW)⧗ Uploading flash...$(RESET)"
+	@$(AVRDUDE) \
+		-c $(PROGRAMMER) \
+		-p $(DEVICE) \
+		-U flash:w:$(HEX):i
 
-disasm: ./target/$(DESTINATION).elf
-	@avr-objdump --section-headers ./target/$(DESTINATION).elf
-	@avr-objdump --disassemble ./target/$(DESTINATION).elf
-	@avr-objdump --full-contents --section=.data ./target/$(DESTINATION).elf
+fuses-upload:
+	@echo "$(YELLOW)⧗ Uploading fuses...$(RESET)"
+	@$(AVRDUDE) \
+		-c $(PROGRAMMER) \
+		-p $(DEVICE) \
+		-U lfuse:w:$(TARGET_DIR)/lfuse.hex:i \
+		-U hfuse:w:$(TARGET_DIR)/hfuse.hex:i \
+		-U efuse:w:$(TARGET_DIR)/efuse.hex:i
 
-size:	./target/$(DESTINATION).elf
-	@avr-size --format=AVR --mcu=$(DEVICE) ./target/$(DESTINATION).elf
+# ==============================================================
+# Information / analysis
+# ==============================================================
+disasm: $(ELF)
+	@$(OBJDUMP) --section-headers $(ELF)
+	@$(OBJDUMP) --disassemble $(ELF)
+	@$(OBJDUMP) --full-contents --section=.data $(ELF)
+
+size: $(ELF)
+	@$(SIZE) \
+		--format=AVR \
+		--mcu=$(DEVICE) \
+		$(ELF)
 
 dump:
-	@avrdude -c $(PROGRAMMER) -p $(DEVICE) -U flash:r:-:h
+	@$(AVRDUDE) \
+		-c $(PROGRAMMER) \
+		-p $(DEVICE) \
+		-U flash:r:-:h
 
-fuses-default:
-	@avrdude -c $(PROGRAMMER) -p $(DEVICE) -U lfuse:w:0x62:m -U hfuse:w:0x99:m -U efuse:w:0xff:m 
-
-fuses-no-divider-int-rc:
-	@avrdude -c $(PROGRAMMER) -p $(DEVICE) -U lfuse:w:0xe2:m -U hfuse:w:0x99:m -U efuse:w:0xff:m 
-
-fuses-no-divider-ext-osc:
-	@avrdude -c $(PROGRAMMER) -p $(DEVICE) -U lfuse:w:0xff:m
-
-fuses-with-divider-ext-osc:
-	@avrdude -c $(PROGRAMMER) -p $(DEVICE) -U lfuse:w:0x7f:m
-
-fuses-jtag-disable:
-	@avrdude -c $(PROGRAMMER) -p $(DEVICE) -U hfuse:w:0xd9:m
-
+# ==============================================================
+# Clean
+# ==============================================================
+clean:
+	@rm --force --recursive --verbose $(TARGET_DIR)
+	@echo "$(RED)✘ Clean finished$(RESET)"
 EOF
 
 # gpio.h
@@ -246,6 +383,50 @@ cat > "src/drivers/gpio.h" <<EOF
 
 #endif /* GPIO_H_ */
 EOF
+
+# fuses.c
+cat > "src/drivers/fuses.c" <<EOF
+#include <avr/io.h>
+
+/*
+ * Fuses configuration default:
+ * lfuse=0x62
+ * hfuse=0x99
+ * efuse=0xFF
+ */
+
+FUSES =
+{
+    .low = 0xFF
+        & FUSE_CKDIV8
+        // & FUSE_CKOUT
+        // & FUSE_SUT_CKSEL5
+        & FUSE_SUT_CKSEL4
+        & FUSE_SUT_CKSEL3
+        & FUSE_SUT_CKSEL2
+        // & FUSE_SUT_CKSEL1
+        & FUSE_SUT_CKSEL0
+    ,
+
+    .high = 0xFF
+        // & FUSE_OCDEN
+        & FUSE_JTAGEN
+        & FUSE_SPIEN
+        // & FUSE_WDTON
+        // & FUSE_EESAVE
+        & FUSE_BOOTSZ1
+        & FUSE_BOOTSZ0
+        // & FUSE_BOOTRST
+    ,
+
+    .extended = 0xFF 
+        // & FUSE_BODLEVEL2 
+        // & FUSE_BODLEVEL1 
+        // & FUSE_BODLEVEL0
+    ,
+};
+EOF
+
 
 # README.md
 cat > "README.md" <<EOF
