@@ -1,3 +1,6 @@
 *.pdf
 *.elf
 *.hex
+*.o
+*.d
+*.bin
