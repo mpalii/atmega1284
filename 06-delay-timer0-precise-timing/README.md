@@ -76,7 +76,7 @@
   - TIFR0 – Timer/Counter Interrupt Flag Register.  
 - With the current example you will get something that really similar to the 25kHz pulses, but depending on temperature or supply voltage result value may vary. 
 - Just for investigation try to freez the MCU, then check the real frequency on pin 0 port A, and then heat it, and check the frequency again. Moreover, try to change the value of supply voltage (of course do not exceed the maximum voltage, see the datasheet).  
-- These results show that internal RC can't provide accurate timings. Let's adjust our 'Makefile' with the target `fuses-no-divider-ext-clk` which turn off internal prescaler and internal RC, and for now the MCU will look at the external oscillator, so just connect 8MHz crystal with two capacitors as described in the datasheet.  
+- These results show that internal RC can't provide accurate timings. Let's adjust our 'Makefile' with the target `fuses-no-divider-ext-osc` which turn off internal prescaler and internal RC, and for now the MCU will look at the external oscillator, so just connect 8MHz crystal with two capacitors as described in the datasheet.  
  - Do the previous experiments again with external crystal. Now it looks really better:)  
 
  ---
