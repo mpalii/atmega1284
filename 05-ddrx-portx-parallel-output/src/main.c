@@ -156,12 +156,12 @@ void ex3_parallel_output_type_layout(void)
 	// 2 bytes
 	// enum EState{STATE1, STATE2, STATE3};
 	// result = sizeof(STATE1);
-
-    // 4 bytes
 	// result = sizeof(6);
 	// result = sizeof(-1);
 	// result = sizeof(0xFF);
 	// result = sizeof(0xffFF);
+
+    // 4 bytes
 	// result = sizeof(0xFFffFF);
 	// result = sizeof(0xffFFffFF);
 	// result = sizeof(-40000);
@@ -188,7 +188,7 @@ void ex3_parallel_output_type_layout(void)
 
 	// result = sizeof(U'©');					// 4 bytes
 	// result = sizeof("©");					// 3 bytes
-	// result = sizeof("a");					// 2 bytes (int)
+	// result = sizeof("a");					// 2 bytes ('a' + \0)
 	// result = sizeof((char) 'a');				// 1 byte
 	// result = sizeof("");						// 1 byte
 	// result = sizeof("Hello World");			// 12 bytes

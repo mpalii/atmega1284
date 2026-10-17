@@ -45,7 +45,7 @@
 |**short unsigned int**                                             |2|
 |**float**                                                          |4|
 |**double**                                                         |4|
-|**long double**                                                    |4|
+|**long double**                                                    |8|
 |**void**                                                           |1|
 |**char \***                                                        |2|
 |**int \***                                                         |2|
