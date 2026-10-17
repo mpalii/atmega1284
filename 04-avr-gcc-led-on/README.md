@@ -39,7 +39,7 @@
 
 - The initial command allows, in one shot, to preprocess, compile, assemble, and link the artifact from the 'main.c' source file:  
  `avr-gcc -mmcu=atmega1284 -Os -Wall -o firmware.elf main.c`  
-With the flags applied, we specify the device name, disable compiler optimization, and show all compilation warnings if any occur.  
+With the flags applied, we specify the device name, enable compiler size optimization, and show all compilation warnings if any occur.  
 
 - In order to display the sizes of sections inside binary files:  
  `avr-size --format=avr --mcu=atmega1284 firmware.elf`  
